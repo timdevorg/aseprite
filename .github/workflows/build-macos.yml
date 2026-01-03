@@ -90,7 +90,7 @@ jobs:
           sips -z 256 256   data/icons/ase256.png --out aseprite.iconset/icon_256x256.png
           sips -z 512 512   data/icons/ase256.png --out aseprite.iconset/icon_256x256@2x.png
           sips -z 512 512   data/icons/ase256.png --out aseprite.iconset/icon_512x512.png
-          cp data/icons/ase1024.png aseprite.iconset/icon_512x512@2x.png
+          sips -z 1024 1024 data/icons/ase256.png --out aseprite.iconset/icon_512x512@2x.png
           
           # Convert to icns
           iconutil -c icns aseprite.iconset -o Aseprite.icns
