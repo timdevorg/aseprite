@@ -72,9 +72,41 @@ jobs:
       run: |
         cd build && ninja aseprite
     
+    - name: Generate app icon
+      shell: bash
+      run: |
+        # Check if icon source exists
+        if [ -f "data/icons/ase256.png" ]; then
+          # Create iconset directory
+          mkdir -p aseprite.iconset
+          
+          # Generate different icon sizes
+          sips -z 16 16     data/icons/ase256.png --out aseprite.iconset/icon_16x16.png
+          sips -z 32 32     data/icons/ase256.png --out aseprite.iconset/icon_16x16@2x.png
+          sips -z 32 32     data/icons/ase256.png --out aseprite.iconset/icon_32x32.png
+          sips -z 64 64     data/icons/ase256.png --out aseprite.iconset/icon_32x32@2x.png
+          sips -z 128 128   data/icons/ase256.png --out aseprite.iconset/icon_128x128.png
+          sips -z 256 256   data/icons/ase256.png --out aseprite.iconset/icon_128x128@2x.png
+          sips -z 256 256   data/icons/ase256.png --out aseprite.iconset/icon_256x256.png
+          sips -z 512 512   data/icons/ase256.png --out aseprite.iconset/icon_256x256@2x.png
+          sips -z 512 512   data/icons/ase256.png --out aseprite.iconset/icon_512x512.png
+          cp data/icons/ase1024.png aseprite.iconset/icon_512x512@2x.png
+          
+          # Convert to icns
+          iconutil -c icns aseprite.iconset -o Aseprite.icns
+          
+          # Copy to app bundle
+          cp Aseprite.icns build/bin/Aseprite.app/Contents/Resources/
+          
+          echo "App icon generated successfully"
+        else
+          echo "Warning: Icon source not found, skipping icon generation"
+        fi
+    
     - name: Show build output
       run: |
         ls -lah build/bin/
+        ls -lah build/bin/Aseprite.app/Contents/Resources/
     
     - name: Create ZIP archive
       run: |
